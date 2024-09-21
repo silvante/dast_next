@@ -12,6 +12,18 @@ const config: Config = {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+      width: {
+        base: "2400px"
+      },
+      padding: {
+        base: "0px 50px"
+      },
+      backgroundColor: {
+        base_red: "#F5333F"
+      },
+      textColor: {
+        base_red: "#F5333F"
+      }
     },
   },
   plugins: [],
