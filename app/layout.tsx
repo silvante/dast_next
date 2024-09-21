@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import Header from "./components/Header";
 import { Roboto_Condensed } from "next/font/google";
 
 const geistSans = localFont({
@@ -35,7 +34,6 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased ${Roboto_Condensed_init.variable}`}
       >
-        <Header />
         {children}
       </body>
     </html>
