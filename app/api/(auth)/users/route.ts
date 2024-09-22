@@ -1,6 +1,9 @@
 import connect from "@/lib/db";
 import User from "@/lib/models/user";
 import { NextResponse } from "next/server";
+import bcryptjs from "bcryptjs";
+
+const cyfer = bcryptjs.genSaltSync(8);
 
 export const GET = async () => {
   try {
@@ -20,8 +23,16 @@ export const GET = async () => {
 export const POST = async (req: Request) => {
   try {
     const body = await req.json();
+    const { name, username, email, bio, password, avatar } = body;
     await connect();
-    const new_user = new User(body);
+    const new_user = new User({
+      name,
+      username,
+      email,
+      bio,
+      password: bcryptjs.hashSync(password, cyfer),
+      avatar,
+    });
     await new_user.save();
 
     return new NextResponse(new_user, { status: 201 });
