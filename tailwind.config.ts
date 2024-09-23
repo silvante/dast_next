@@ -13,17 +13,20 @@ const config: Config = {
         foreground: "var(--foreground)",
       },
       width: {
-        base: "2400px"
+        base: "2400px",
       },
       padding: {
-        base: "0px 50px"
+        base: "0px 50px",
       },
       backgroundColor: {
-        base_red: "#F5333F"
+        base_red: "#F5333F",
       },
       textColor: {
-        base_red: "#F5333F"
-      }
+        base_red: "#F5333F",
+      },
+      borderColor: {
+        base_red: "#F5333F",
+      },
     },
   },
   plugins: [],
