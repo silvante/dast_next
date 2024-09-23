@@ -35,6 +35,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased ${Roboto_Condensed_init.variable}`}
       >
+        {/* {path !== "/register" && path !== "/register/otp" && path !== "/login"} */}
         <Header />
         {children}
       </body>
