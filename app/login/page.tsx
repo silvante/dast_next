@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 import RegisterSide from "../components/RegisterSide";
 
@@ -6,11 +8,11 @@ const Login = () => {
   const [password, setpassword] = useState("");
   return (
     <div>
-      <div>
+      <div className="flex">
         <div className="w-[50%] flex items-center justify-center">
           <div>
             <button className="bg-slate-950 text-white shadow-lg py-3 w-60 px-5 rounded-lg flex items-center justify-center mb-3">
-              Login with google <i className="bx bxl-google text-xl ml-1"></i>
+              Login with google
             </button>
             <form className="w-60 space-y-3 flex flex-col text-center">
               <h3 className="text-lg font-semibold">Login</h3>
