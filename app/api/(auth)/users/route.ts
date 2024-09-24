@@ -4,6 +4,7 @@ import bcryptjs from "bcryptjs";
 import nodemailer from "nodemailer";
 import Otp from "@/lib/models/otp";
 import { NextApiRequest, NextApiResponse } from "next";
+import { NextResponse } from "next/server";
 
 const cyfer = bcryptjs.genSaltSync(8);
 
@@ -17,20 +18,20 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export const GET = async (res: NextApiResponse) => {
+export const GET = async () => {
   try {
     await connect();
     const users = await User.find();
     if (!users || users.length == 0) {
-      return res.send("no users are found");
+      return new NextResponse("users are not found");
     }
-    return res.send(users);
+    return new NextResponse(JSON.stringify(users), { status: 200 });
   } catch (error: any) {
-    return res.send("error in fatching users");
+    return new NextResponse("server error", { status: 500 });
   }
 };
 
-export const POST = async (req: NextApiRequest, res: NextApiResponse) => {
+export const POST = async (req: NextApiRequest) => {
   try {
     const { name, username, email, bio, password, avatar } = req.body;
     await connect();
@@ -39,10 +40,10 @@ export const POST = async (req: NextApiRequest, res: NextApiResponse) => {
     const existingUsername = await User.find({ username });
 
     if (existingEmail.length >= 1) {
-      return res.send("email is alredy used");
+      return new NextResponse("this email is alredy used", { status: 500 });
     }
     if (existingUsername.length >= 1) {
-      return res.send("username is alredy used");
+      return new NextResponse("this username is alredy used", { status: 500 });
     } else {
       const new_user = await new User({
         name,
@@ -52,13 +53,14 @@ export const POST = async (req: NextApiRequest, res: NextApiResponse) => {
         password: bcryptjs.hashSync(password, cyfer),
         avatar,
       });
+      const res = new NextResponse();
       new_user.save().then((result: any) => {
         sendOtp(result, res);
       });
       // return .send(newUser);
     }
   } catch (error: any) {
-    return res.send("error in creating user");
+    return new NextResponse("server error", { status: 500 });
   }
 };
 

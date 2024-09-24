@@ -12,13 +12,13 @@ export const GET = (req: NextApiRequest, res: NextApiResponse) => {
 
       jwt.verify(token, jwt_secret, {}, async (err, user_doc: any) => {
         if (err) {
-          return res.status(401).json({ message: "Invalid token" });
+          return res.json({ message: "Invalid token" });
         }
 
         try {
           const the_user = await User.findById(user_doc.id);
           if (!the_user) {
-            return res.status(404).send("user is not defined");
+            return res.send("user is not defined");
           }
           const {
             _id,
@@ -44,14 +44,14 @@ export const GET = (req: NextApiRequest, res: NextApiResponse) => {
           });
         } catch (err) {
           console.log(err);
-          res.status(404).send("server error");
+          res.send("server error");
         }
       });
     } else {
-      res.status(401).json("No token provided");
+      res.json("No token provided");
     }
   } catch (error) {
     console.log(error);
-    return res.status(500).send("server error");
+    return res.send("server error");
   }
 };
