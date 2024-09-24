@@ -1,29 +1,28 @@
 import jwt from "jsonwebtoken";
 import User from "@/lib/models/user";
-import { NextResponse } from "next/server";
 import bcryptjs from "bcryptjs";
+import { NextApiRequest, NextApiResponse } from "next";
 
 const jwt_secret: any = process.env.JWT_SECRET;
 
-export const POST = async (req: Request) => {
+export const POST = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    const body = await req.json();
-    const { email, password } = body;
+    const { email, password } = req.body;
 
     const the_user = await User.findOne({ email });
 
     if (!the_user) {
-      return new NextResponse("user is not defined", { status: 404 });
+      return res.send("user is not defined");
     }
 
     if (the_user.verificated !== true) {
-      return new NextResponse("your accout is not verified", { status: 404 });
+      return res.send("user is not verified");
     }
 
     const isMatch = await bcryptjs.compare(password, the_user.password);
 
     if (!isMatch) {
-      return new NextResponse("invalid cridintials", { status: 404 });
+      return res.send("invalide clidintials");
     }
 
     const token = jwt.sign(
@@ -32,10 +31,8 @@ export const POST = async (req: Request) => {
       {}
     );
 
-    return new NextResponse(token, { status: 200 });
+    return res.send(token);
   } catch (error: any) {
-    return new NextResponse("error in updating user" + error.massage, {
-      status: 500,
-    });
+    return res.send("error in login");
   }
 };

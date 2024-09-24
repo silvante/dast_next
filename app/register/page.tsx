@@ -2,11 +2,28 @@
 
 import React, { useState } from "react";
 import RegisterSide from "../components/RegisterSide";
+import server_fatcher from "@/lib/axiosInstance";
 
 const Register = () => {
+  const [name, setname] = useState("new user");
   const [email, setemail] = useState("");
   const [username, setusername] = useState("");
   const [password, setpassword] = useState("");
+
+  const Registrate = async (e: any) => {
+    e.preventDefault();
+    try {
+      const { data } = await server_fatcher.post("/api/users", {
+        name,
+        email,
+        password,
+        username,
+      });
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div>
       <div className="flex">
@@ -15,7 +32,10 @@ const Register = () => {
             <button className="bg-slate-950 text-white shadow-lg py-3 w-60 px-5 rounded-lg flex items-center justify-center mb-3">
               Sing up with google <i className="bx bxl-google text-xl ml-1"></i>
             </button>
-            <form className="w-60 space-y-3 flex flex-col text-center">
+            <form
+              className="w-60 space-y-3 flex flex-col text-center"
+              onSubmit={Registrate}
+            >
               <h3 className="text-lg font-semibold">Registrate</h3>
               <input
                 type="text"

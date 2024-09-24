@@ -12,7 +12,6 @@ import gmail from "@/public/gmail.jpg";
 
 const RegisterSide = () => {
   const path = usePathname();
-  console.log(path);
 
   return (
     <div className="w-[50%] bg-slate-950 h-screen text-white flex justify-center items-center">

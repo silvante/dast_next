@@ -1,10 +1,9 @@
 import connect from "@/lib/db";
 import User from "@/lib/models/user";
-import { NextResponse } from "next/server";
 import bcryptjs from "bcryptjs";
 import nodemailer from "nodemailer";
 import Otp from "@/lib/models/otp";
-import { NextApiResponse } from "next";
+import { NextApiRequest, NextApiResponse } from "next";
 
 const cyfer = bcryptjs.genSaltSync(8);
 
@@ -18,35 +17,32 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export const GET = async () => {
+export const GET = async (res: NextApiResponse) => {
   try {
     await connect();
     const users = await User.find();
     if (!users || users.length == 0) {
-      return new NextResponse("no users are found", { status: 404 });
+      return res.send("no users are found");
     }
-    return new NextResponse(JSON.stringify(users), { status: 200 });
+    return res.send(users);
   } catch (error: any) {
-    return new NextResponse("error in fatching users" + error.massage, {
-      status: 500,
-    });
+    return res.send("error in fatching users");
   }
 };
 
-export const POST = async (req: Request, res: NextApiResponse) => {
+export const POST = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    const body = await req.json();
-    const { name, username, email, bio, password, avatar } = body;
+    const { name, username, email, bio, password, avatar } = req.body;
     await connect();
 
     const existingEmail = await User.find({ email });
     const existingUsername = await User.find({ username });
 
     if (existingEmail.length >= 1) {
-      return new NextResponse("email is alredy used", { status: 404 });
+      return res.send("email is alredy used");
     }
     if (existingUsername.length >= 1) {
-      return new NextResponse("username is alredy used", { status: 404 });
+      return res.send("username is alredy used");
     } else {
       const new_user = await new User({
         name,
@@ -59,12 +55,10 @@ export const POST = async (req: Request, res: NextApiResponse) => {
       new_user.save().then((result: any) => {
         sendOtp(result, res);
       });
-      // return res.status(201).send(newUser);
+      // return .send(newUser);
     }
   } catch (error: any) {
-    return new NextResponse("error in creating users" + error.massage, {
-      status: 500,
-    });
+    return res.send("error in creating user");
   }
 };
 
@@ -103,6 +97,6 @@ const sendOtp = async ({ _id, email }: any, res: any) => {
       },
     });
   } catch (error) {
-    return new NextResponse("server error", { status: 500 });
+    return res.send("server error");
   }
 };
